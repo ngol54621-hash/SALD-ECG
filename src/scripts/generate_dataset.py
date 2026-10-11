@@ -204,17 +204,17 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--config", default=default_config_path())
     parser.add_argument("--vae-run", default=None,
-                        help="不传则用 config 的 vae.run_dir。")
+                        help="VAE run directory; defaults to vae.run_dir in the configuration.")
     parser.add_argument(
         "--dm-run",
         default=None,
-        help="不传则用 config 的 ldm.run_dir。",
+        help="Diffusion model run directory; defaults to ldm.run_dir in the configuration.",
     )
     parser.add_argument("--run-name", default=None)
     parser.add_argument(
         "--resume-run",
         default=None,
-        help="复用已有 generate run（名称或绝对路径）；可配合 --splits 和 --overwrite。",
+        help="Reuse an existing generation run by name or absolute path; supports --splits and --overwrite.",
     )
     parser.add_argument("--splits", default="train,val,test")
     parser.add_argument("--batch-size", type=int, default=128)
@@ -225,9 +225,9 @@ def main():
     parser.add_argument("--overwrite", action="store_true")
     parser.add_argument("--max-samples", type=int, default=None)
     parser.add_argument("--guidance-scale", type=float, default=None,
-                        help="CFG 引导强度，覆盖 config 的 sample.guidance_scale。")
+                        help="CFG guidance scale; overrides sample.guidance_scale in the configuration.")
     parser.add_argument("--devices", default=None,
-                        help="逗号分隔的生成设备，如 cuda:0,cuda:1 或 0,1；默认最多使用两张可见 CUDA 卡。")
+                        help="Comma-separated generation devices, such as cuda:0,cuda:1 or 0,1; defaults to up to two visible CUDA devices.")
     args = parser.parse_args()
 
     cfg = load_config(args.config)

@@ -138,7 +138,7 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--config", default=default_config_path())
     parser.add_argument("--vae-run", default=None,
-                        help="VAE run dir；不传则用 config 的 vae.run_dir。")
+                        help="VAE run directory; defaults to vae.run_dir in the configuration.")
     parser.add_argument("--run-name", default=None)
     args = parser.parse_args()
 
