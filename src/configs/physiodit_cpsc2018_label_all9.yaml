@@ -1,0 +1,86 @@
+seed: 2026
+device: cuda
+output_root: outputs/generation/cpsc2018_label_all9
+
+data:
+  dataset_id: cpsc2018_label_all9
+  array_prefix: cpsc
+  root: data/CPSC2018_SSSD_official_fs100
+  array_subdir: sssd_arrays
+  label_metadata: data/CPSC2018_SSSD_official_fs100/label_metadata.json
+  label_column: label_all
+  num_leads: 8
+  num_labels: 9
+  signal_length: 1000
+  sampling_rate_hz: 100
+  lead_names: [I, V1, V2, V3, V4, V5, V6, aVF]
+  num_workers: 4
+  cache_dir: outputs/generation/cpsc2018_label_all9/cache
+  norm_low_pct: 0.5
+  norm_high_pct: 99.5
+  norm_name: central99_perlead_mean_global_std
+
+vae:
+  run_dir: outputs/generation/cpsc2018_label_all9/vae/20260808-231446
+  z_channels: 32
+  base_channels: 64
+  ch_mult: [1, 2, 4]
+  num_res_blocks: 2
+  use_mid_attention: true
+  groupnorm_groups: 32
+  beta_max: 2.0e-6
+  kl_warmup_steps: 10000
+  free_bits: 0.1
+  l1_weight: 1.0
+  mse_weight: 1.0
+  stft_weight: 0.5
+  stft_fft_sizes: [64, 128, 256]
+  lr: 1.0e-4
+  weight_decay: 0.0
+  batch_size: 64
+  epochs: 100
+  grad_clip: 1.0
+  val_interval: 2
+
+ldm:
+  run_dir: outputs/generation/cpsc2018_label_all9/dm/20260808-232725
+  base_channels: 64
+  label_embed_dim: 256
+  cfg_dropout: 0.1
+  fft_weight: 0.2
+  physiodit:
+    dim: 256
+    depth: 6
+    mlp_ratio: 4.0
+    dropout: 0.0
+    top_k: 2
+    p_min: 8
+    p_max: 125
+  timesteps: 200
+  beta_schedule: cosine
+  pred_type: v
+  lr: 2.0e-4
+  weight_decay: 0.0
+  batch_size: 64
+  epochs: 100
+  grad_clip: 1.0
+  ema_decay: 0.995
+  ema_update_after: 1000
+  ema_update_every: 1
+  save_interval: 20
+  sample_interval: 10
+  sample_num: 4
+
+sample:
+  sampler: ddpm
+  ddim_steps: 100
+  ddim_eta: 0.0
+  guidance_scale: 1.5
+
+eval:
+  hubert_model_dir: checkpoints/hubert-ecg-base
+  embedding_batch_size: 64
+  pca_dim: 64
+  pca_seed: 24
+  coverage_k: 5
+  metrics_batch_size: 256
